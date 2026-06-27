@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_27_223618) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_27_225829) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -37,14 +37,14 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_27_223618) do
     t.index ["user_id"], name: "index_applications_on_user_id"
   end
 
-  create_table "shelter_staffs", force: :cascade do |t|
+  create_table "shelter_staff", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "role"
     t.bigint "shelter_id", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
-    t.index ["shelter_id"], name: "index_shelter_staffs_on_shelter_id"
-    t.index ["user_id"], name: "index_shelter_staffs_on_user_id"
+    t.index ["shelter_id"], name: "index_shelter_staff_on_shelter_id"
+    t.index ["user_id"], name: "index_shelter_staff_on_user_id"
   end
 
   create_table "shelters", force: :cascade do |t|
@@ -67,6 +67,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_27_223618) do
   add_foreign_key "animals", "shelters"
   add_foreign_key "applications", "animals"
   add_foreign_key "applications", "users"
-  add_foreign_key "shelter_staffs", "shelters"
-  add_foreign_key "shelter_staffs", "users"
+  add_foreign_key "shelter_staff", "shelters"
+  add_foreign_key "shelter_staff", "users"
 end
