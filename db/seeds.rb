@@ -1,7 +1,8 @@
 puts "Clearing data..."
 [Application, ShelterStaff, Animal, User, Shelter].each(&:delete_all)
 
-shelters = 10.times.map do
+# Keep shelters low so animals cluster heavily within them
+shelters = 15.times.map do
   Shelter.create!(
     name:  "#{Faker::Company.name} Shelter",
     city:  Faker::Address.city,
@@ -10,7 +11,9 @@ shelters = 10.times.map do
   )
 end
 
-users = 100.times.map do
+# Scaled up users to create plenty of potential adopters and staff
+puts "Seeding users..."
+users = 2_000.times.map do
   User.create!(
     email: Faker::Internet.unique.email,
     name:  Faker::Name.name,
@@ -18,7 +21,8 @@ users = 100.times.map do
   )
 end
 
-users.first(20).each_with_index do |user, i|
+puts "Seeding staff assignments..."
+users.first(150).each_with_index do |user, i|
   ShelterStaff.create!(
     shelter: shelters[i % shelters.size],
     user:    user,
@@ -31,20 +35,26 @@ species_breeds = {
   "cat"    => ["Siamese", "Persian", "Maine Coon", "Tabby"],
   "rabbit" => ["Holland Lop", "Lionhead", "Rex"]
 }
-animals = 500.times.map do
+
+# Bumped to 15,000 animals. This easily crosses the threshold where 
+# Postgres realizes sequential scanning is too expensive.
+puts "Seeding 15,000 animals (this may take a few moments)..."
+animals = 15_000.times.map do
   sp = species_breeds.keys.sample
   Animal.create!(
     name:      Faker::Creature::Animal.name.capitalize,
     species:   sp,
     breed:     species_breeds[sp].sample,
     age_years: rand(0..12),
-    adopted:   [true, false, false].sample,
+    # Keeps your ~67% unadopted (adopted = false) ratio intact
+    adopted:   [true, false, false].sample, 
     shelter:   shelters.sample
   )
 end
 
 statuses = ["pending", "pending", "approved", "rejected"]
-1_200.times do
+puts "Seeding applications..."
+10_000.times do
   Application.create!(
     user:   users.sample,
     animal: animals.sample,
