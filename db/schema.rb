@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_28_121704) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_28_133037) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -25,6 +25,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_28_121704) do
     t.datetime "updated_at", null: false
     t.index ["adopted"], name: "index_animals_available", where: "(adopted = false)"
     t.index ["shelter_id"], name: "index_animals_on_shelter_id"
+    t.index ["shelter_id"], name: "index_animals_on_shelter_id_and_adopted", where: "(adopted = false)"
   end
 
   create_table "applications", force: :cascade do |t|
